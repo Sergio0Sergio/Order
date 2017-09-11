@@ -1,5 +1,6 @@
 package ru.habrahabr.sergiosergio.order;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,9 +13,11 @@ import java.io.IOException;
 
 @Controller
 public class HomeController {
-    String imageSourse;
+    private String imageSourse;
+    private String captchaToken;
     private Greeting greeting;
     Document webPage;
+    Connection conn;
 
     @GetMapping("/greeting")
     public String greetingForm(Model model){
@@ -22,12 +25,19 @@ public class HomeController {
 
         try {
             webPage = Jsoup.connect("https://egrul.nalog.ru/").get();
+
         } catch (IOException e) {
             System.err.println("страница ФНС недоступна.");
             e.printStackTrace();
         }
         Element image = webPage.select("img").get(0);
         imageSourse = image.absUrl("src");
+        Elements captchaField = webPage.getElementsByClass("form-field captcha-field");
+        Elements inputElements = captchaField.select("input");
+        Element captchaElement = inputElements.get(1);
+        captchaToken = captchaElement.attr("value");
+
+        //System.out.println(captchaToken);
         model.addAttribute("imageSource", imageSourse );
         return "greeting";
     }
