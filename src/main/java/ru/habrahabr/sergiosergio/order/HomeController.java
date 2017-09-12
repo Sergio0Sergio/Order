@@ -14,7 +14,7 @@ import java.io.IOException;
 @Controller
 public class HomeController {
     private String imageSourse;
-    private String captchaToken;
+    public String captchaToken;
     private Greeting greeting;
     Document webPage;
     Connection conn;
@@ -37,6 +37,7 @@ public class HomeController {
         Elements inputElements = captchaField.select("input");
         Element captchaElement = inputElements.get(1);
         captchaToken = captchaElement.attr("value");
+        System.out.println(captchaToken);
 
         //System.out.println(captchaToken);
         model.addAttribute("imageSource", imageSourse );

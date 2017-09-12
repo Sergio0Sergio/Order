@@ -15,7 +15,7 @@ public class Greeting {
         return captcha;
     }
 
-    public void setCaptcha(String captchacha) {
+    public void setCaptcha(String captcha) {
         this.captcha = captcha;
     }
 }
