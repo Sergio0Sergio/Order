@@ -2,20 +2,20 @@ package ru.habrahabr.sergiosergio.order;
 
 public class Greeting {
 
-    private int inn;
-    private int captcha;
+    private String inn;
+    private String captcha;
 
-    public int getInn() {return inn;  }
+    public String getInn() {return inn;  }
 
-    public void setInn(int inn) {
+    public void setInn(String inn) {
         this.inn = inn;
     }
 
-    public int getCaptcha() {
+    public String getCaptcha() {
         return captcha;
     }
 
-    public void setCaptcha(int captchacha) {
+    public void setCaptcha(String captchacha) {
         this.captcha = captcha;
     }
 }
