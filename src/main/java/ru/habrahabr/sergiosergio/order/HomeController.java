@@ -2,7 +2,6 @@ package ru.habrahabr.sergiosergio.order;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,7 +18,7 @@ public class HomeController {
     private Greeting greeting;
     Document webPage;
     Connection conn;
-    StringBuilder strbuilder;
+    StringBuilder stringBuilder;
 
     @GetMapping("/greeting")
     public String greetingForm(Model model){
@@ -46,6 +45,9 @@ public class HomeController {
     @PostMapping(value = "/greeting")
     public String greetingSubmit(@ModelAttribute Greeting greeting){
         this.greeting = greeting;
+        System.out.println(greeting.getCaptcha());
+        System.out.println(greeting.getInn());
+        System.out.println(captchaToken);
 
         try {
             conn = Jsoup.connect("https://egrul.nalog.ru/");
@@ -57,6 +59,7 @@ public class HomeController {
             conn.data("captchaToken", captchaToken);
             conn.method(Connection.Method.POST);
             Connection.Response resp = conn.execute();
+            System.out.println(resp.body().toString());
             webPage = conn.url("https://egrul.nalog.ru/").get();
 
         } catch (IOException e) {
@@ -68,7 +71,15 @@ public class HomeController {
         Element table = webPage.select("table").get(0);
         Element row = table.select("tr").first();
         Elements cols = row.select("td");
+        for (int i = 0; i < 6; i++){
+
+            if (i != 4) {
+                stringBuilder.append(cols.get(i).text() + " ");
+            }
+        }
+        System.out.println(stringBuilder.toString());
         
+
 
 
         return "result";
