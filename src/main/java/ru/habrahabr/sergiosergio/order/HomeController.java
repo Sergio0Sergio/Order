@@ -58,10 +58,13 @@ public class HomeController {
             conn.data("srchFl", "ogrn");
             conn.data("captcha", greeting.getCaptcha());
             conn.data("captchaToken", captchaToken);
+            System.out.println("test 1");
             conn.method(Connection.Method.POST);
-            Connection.Response resp = conn.execute();
-            System.out.println(resp.body().toString());
+            System.out.println("test 2");
+            //Connection.Response resp = conn.execute();
+            System.out.println("test3");
             webPage = conn.url("https://egrul.nalog.ru/").get();
+            System.out.println("test 4");
 
         } catch (IOException e) {
             System.err.println("страница ФНС недоступна.");
@@ -69,7 +72,7 @@ public class HomeController {
         }
 
 
-        Element table = webPage.select("table").get(0);
+        Element table = webPage.select("table").first();
         Element row = table.select("tr").first();
         Elements cols = row.select("td");
         for (int i = 0; i < 6; i++){
