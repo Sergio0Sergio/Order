@@ -71,8 +71,8 @@ public class HomeController {
             e.printStackTrace();
         }
 
-
-        Element table = webPage.select("table").first();
+        Element resultContent = webPage.getElementById("resultContent");
+       // Element table = resultContent.getElementsByAttribute("table");
         Element row = table.select("tr").first();
         Elements cols = row.select("td");
         for (int i = 0; i < 6; i++){
@@ -82,6 +82,7 @@ public class HomeController {
             }
         }
         System.out.println(stringBuilder.toString());
+
         
 
 
