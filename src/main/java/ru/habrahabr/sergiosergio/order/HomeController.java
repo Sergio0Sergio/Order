@@ -67,8 +67,10 @@ public class HomeController {
             e.printStackTrace();
         }
 
-        Element resultContent = webPage.getElementById("resultContent");
-        Element table = webPage.getElementsByTag("tbody").first();
+        //Element resultContent = webPage.getElementById("resultContent");
+        //Elements tables = webPage.select("table");
+        Elements tables = webPage.select("table");
+        Element table = tables.get(0);
         Element row = table.select("tr").get(0);
         Elements cols = row.select("td");
         for (int i = 0; i < 6; i++){
