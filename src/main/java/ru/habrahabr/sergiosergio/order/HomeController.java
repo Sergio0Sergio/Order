@@ -8,6 +8,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -38,6 +39,7 @@ public class HomeController {
     CloseableHttpResponse response2;
     //BufferedReader reader;
     String json;
+    Response gsonResult;
 
 
     //Connection conn;
@@ -79,7 +81,7 @@ public class HomeController {
         System.out.println(greeting.getInn());
         System.out.println(captchaToken);
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost("https://egrul.nalog.ru/");
         List <NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair("kind", "ul"));
@@ -89,7 +91,9 @@ public class HomeController {
         nvps.add(new BasicNameValuePair("captcha",greeting.getCaptcha()));
         nvps.add(new BasicNameValuePair("captchaToken",captchaToken));
         try {
+            httpPost.addHeader("content-type", "application/json");
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -106,10 +110,11 @@ public class HomeController {
         HttpEntity entity = response2.getEntity();
         Gson gson = new Gson();
         try {
-            Response gsonResult = gson.fromJson(EntityUtils.toString(entity), Response.class);
+            gsonResult = gson.fromJson(EntityUtils.toString(entity), Response.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("finish");
 
         //HttpEntity entity2 = response2.getEntity();
 //        try {
