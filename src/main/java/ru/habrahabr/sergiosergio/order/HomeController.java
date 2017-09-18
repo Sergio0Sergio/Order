@@ -103,7 +103,13 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        HttpEntity entity = response2.getEntity();
         Gson gson = new Gson();
+        try {
+            Response gsonResult = gson.fromJson(EntityUtils.toString(entity), Response.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //HttpEntity entity2 = response2.getEntity();
 //        try {
