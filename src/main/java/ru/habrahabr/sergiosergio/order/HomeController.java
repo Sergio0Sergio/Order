@@ -91,7 +91,8 @@ public class HomeController {
         nvps.add(new BasicNameValuePair("captcha",greeting.getCaptcha()));
         nvps.add(new BasicNameValuePair("captchaToken",captchaToken));
         try {
-            httpPost.addHeader("content-type", "application/json");
+            httpPost.addHeader("content-type", "multipart/form-data");
+
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 
         } catch (UnsupportedEncodingException e) {
