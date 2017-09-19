@@ -40,6 +40,7 @@ public class HomeController {
     //BufferedReader reader;
     String json;
     Response gsonResult;
+    Gson gson = new Gson();
 
 
     //Connection conn;
@@ -91,103 +92,35 @@ public class HomeController {
         nvps.add(new BasicNameValuePair("captcha",greeting.getCaptcha()));
         nvps.add(new BasicNameValuePair("captchaToken",captchaToken));
         try {
-            httpPost.addHeader("content-type", "multipart/form-data");
+
 
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+            httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0");
+            httpPost.setHeader("X-Requested-With", "XMLHttpRequest");
+
 
         } catch (UnsupportedEncodingException e) {
+            System.out.println("не удалось добавить хедеры или энтити");
             e.printStackTrace();
         }
         try {
             response2 = httpClient.execute(httpPost);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            json = EntityUtils.toString(response2.getEntity(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        HttpEntity entity = response2.getEntity();
-        Gson gson = new Gson();
-        try {
-            gsonResult = gson.fromJson(EntityUtils.toString(entity), Response.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("finish");
+            System.out.println(EntityUtils.toString(response2.getEntity()));
 
-        //HttpEntity entity2 = response2.getEntity();
+        } catch (IOException e) {
+            System.out.println("не удалось получить респонс");
+            e.printStackTrace();
+        }
 //        try {
-//            reader = new BufferedReader(new InputStreamReader(response2.getEntity().getContent()));
+//            json = EntityUtils.toString(response2.getEntity(), "UTF-8");
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-//        StringBuffer result = new StringBuffer();
-//        String line = "";
-//        try {
-//            while ((line = reader.readLine()) != null){
-//                result.append(line);
-//            }
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    //        try {
-    //           obj = new URL("https://egrul.nalog.ru/");
-    //
-    //        } catch (MalformedURLException e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //        try {
-    //            conn = (HttpURLConnection) obj.openConnection();
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //        try {
-    //            conn.setRequestMethod("POST");
-    //        } catch (ProtocolException e) {
-    //            e.printStackTrace();
-    //        }
-    //        conn.setRequestProperty("kind", "ul");
-    //        conn.setRequestProperty("srchUl","ogrn");
-    //        conn.setRequestProperty("ogrninnul",greeting.getInn());
-    //        conn.setRequestProperty("srchFl","ogrn");
-    //        conn.setRequestProperty("captcha",greeting.getCaptcha());
-    //        conn.setRequestProperty("captchaToken",captchaToken);
-    //        conn.setDoOutput(true);
-    //        conn.setUseCaches(false);
-    //        try {
-    //            wr = new DataOutputStream(conn.getOutputStream());
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
 
 
 
 
-    //        conn = Jsoup.connect("https://egrul.nalog.ru/");
-    //        conn.data("kind", "ul");
-    //        conn.data("srchUl", "ogrn");
-    //        conn.data("ogrninnul", greeting.getInn());
-    //        conn.data("srchFl", "ogrn");
-    //        conn.data("captcha", greeting.getCaptcha());
-    //        conn.data("captchaToken", captchaToken);
-    //        conn.method(Connection.Method.POST);
 
-
-
-            //response = conn.url("https://egrul.nalog.ru/").response();
-
-
-            //Element resultContent = webPage.getElementById("resultContent");
-            //Elements tables = webPage.select("table");
-            //Elements tables = webPage.select("table");
-            //Element table = tables.get(0);
-            //Element row = table.select("tr").get(0);
-            //System.out.println(stringBuilder.toString());
         return "result";
 
 
