@@ -37,9 +37,10 @@ public class HomeController {
     private Greeting greeting;
     Document webPage;
     CloseableHttpResponse response2;
-    //BufferedReader reader;
+    Responce result;
+
     String json;
-    Response gsonResult;
+
     Gson gson = new Gson();
 
 
@@ -76,7 +77,7 @@ public class HomeController {
         return "greeting";
     }
     @PostMapping(value = "/greeting")
-    public String greetingSubmit(@ModelAttribute Greeting greeting){
+    public String greetingSubmit(@ModelAttribute Greeting greeting) {
         this.greeting = greeting;
         System.out.println(greeting.getCaptcha());
         System.out.println(greeting.getInn());
@@ -84,13 +85,13 @@ public class HomeController {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost("https://egrul.nalog.ru/");
-        List <NameValuePair> nvps = new ArrayList<>();
+        List<NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair("kind", "ul"));
-        nvps.add(new BasicNameValuePair("srchUl","ogrn"));
-        nvps.add(new BasicNameValuePair("ogrninnul",greeting.getInn()));
-        nvps.add(new BasicNameValuePair("srchFl","ogrn"));
-        nvps.add(new BasicNameValuePair("captcha",greeting.getCaptcha()));
-        nvps.add(new BasicNameValuePair("captchaToken",captchaToken));
+        nvps.add(new BasicNameValuePair("srchUl", "ogrn"));
+        nvps.add(new BasicNameValuePair("ogrninnul", greeting.getInn()));
+        nvps.add(new BasicNameValuePair("srchFl", "ogrn"));
+        nvps.add(new BasicNameValuePair("captcha", greeting.getCaptcha()));
+        nvps.add(new BasicNameValuePair("captchaToken", captchaToken));
         try {
 
 
@@ -100,17 +101,28 @@ public class HomeController {
 
 
         } catch (UnsupportedEncodingException e) {
-            System.out.println("не удалось добавить хедеры или энтити");
+            System.err.println("не удалось добавить хедеры или энтити");
             e.printStackTrace();
         }
         try {
             response2 = httpClient.execute(httpPost);
-            System.out.println(EntityUtils.toString(response2.getEntity()));
+            json = EntityUtils.toString(response2.getEntity());
 
         } catch (IOException e) {
-            System.out.println("не удалось получить респонс");
+            System.err.println("не удалось получить респонс");
             e.printStackTrace();
         }
+
+        result = gson.fromJson(json, Responce.class);
+        Row row = result.getRows().get(0);
+        String finalString = row.getNAME()+ row.getADRESTEXT() + row.getOGRN() + row.getINN() + row.getDTREG();
+
+        System.out.println(finalString);
+        /*
+        Начинается часть работы с документами Microsoft
+         */
+
+
 //        try {
 //            json = EntityUtils.toString(response2.getEntity(), "UTF-8");
 //        } catch (IOException e) {
@@ -118,14 +130,13 @@ public class HomeController {
 //        }
 
 
-
-
-
         return "result";
-
-
-
-
-
     }
+
+
+
+
+
+
+
 }
