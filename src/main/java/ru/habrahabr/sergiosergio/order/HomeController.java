@@ -1,59 +1,84 @@
 package ru.habrahabr.sergiosergio.order;
 
 import com.google.gson.Gson;
-import com.sun.deploy.net.HttpResponse;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Connection;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
 public class HomeController {
-    private String imageSourse;
-    public String captchaToken;
-    private Greeting greeting;
-    Document webPage;
-    CloseableHttpResponse response2;
-    Responce result;
-
-    String json;
-
+    private String imageSourse;//путь до файла капчи
+    public String captchaToken;// токен капчи
+    private Greeting greeting;//класс для хранения введенных инн и капчи
+    Document webPage;//копия страницы для парсера
+    CloseableHttpResponse response2;//http responce
+    Responce result;//хранит pojo вариант json ответа
+    String json;//json ответ
     Gson gson = new Gson();
+    @Value("${config.excellogfile}")
+    String excelLogFile;
+    FileInputStream excelFile;
+    Workbook workbook;
 
 
-    //Connection conn;
-    //StringBuilder stringBuilder;
-//    Connection.Response response;
-//    URL obj;
-//    HttpURLConnection conn;
-//    DataOutputStream wr;
-//    StringBuffer response;
 
     @GetMapping("/greeting")
     public String greetingForm(Model model){
+
+         /*
+        Секция чтения файлов
+         */
+        try {
+            excelFile = new FileInputStream(new File(excelLogFile));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Workbook workbook = new XSSFWorkbook(excelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Sheet datatypeSheet = workbook.getSheetAt(0);
+        Iterator <org.apache.poi.ss.usermodel.Row> iterator = datatypeSheet.iterator();
+        while(iterator.hasNext()){
+
+            org.apache.poi.ss.usermodel.Row currentRow = iterator.next();
+            Iterator<Cell> cellIterator = currentRow.iterator();
+
+            while (cellIterator.hasNext()){
+                Cell currentCell = cellIterator.next();
+            }
+        }
+
+        /*
+        Секция парсера сайта
+         */
         model.addAttribute("greeting", new Greeting());
 
         try {
@@ -69,11 +94,10 @@ public class HomeController {
         Elements inputElements = captchaField.select("input");
         Element captchaElement = inputElements.get(1);
         captchaToken = captchaElement.attr("value");
-        System.out.println(captchaToken);
-
-
-        //System.out.println(captchaToken);
         model.addAttribute("imageSource", imageSourse );
+
+
+
         return "greeting";
     }
     @PostMapping(value = "/greeting")
@@ -118,16 +142,12 @@ public class HomeController {
         String finalString = row.getNAME()+ row.getADRESTEXT() + row.getOGRN() + row.getINN() + row.getDTREG();
 
         System.out.println(finalString);
-        /*
-        Начинается часть работы с документами Microsoft
-         */
 
 
-//        try {
-//            json = EntityUtils.toString(response2.getEntity(), "UTF-8");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+
+
+//
 
 
         return "result";
