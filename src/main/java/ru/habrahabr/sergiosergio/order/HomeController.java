@@ -31,17 +31,18 @@ import java.util.List;
 @Controller
 public class HomeController {
     private String imageSourse;//путь до файла капчи
-    public String captchaToken;// токен капчи
-    private Greeting greeting;//класс для хранения введенных инн и капчи
-    Document webPage;//копия страницы для парсера
-    CloseableHttpResponse response2;//http responce
-    Responce result;//хранит pojo вариант json ответа
-    String json;//json ответ
-    Gson gson = new Gson();
+    private String captchaToken;// токен капчи
+    //private Greeting;//класс для хранения введенных инн и капчи
+    private Document webPage;//копия страницы для парсера
+    private CloseableHttpResponse response2;//http responce
+    private Responce result;//хранит pojo вариант json ответа
+    private String json;//json ответ
+    private Gson gson = new Gson();
     @Value("${config.excellogfile}")
-    String excelLogFile;
-    FileInputStream excelFile;
-    Workbook workbook;
+    private String excelLogFile;
+    private FileInputStream excelFile;
+    private Workbook workbook;
+    List<LogContent> logContent = new ArrayList<>();
 
 
 
@@ -59,26 +60,55 @@ public class HomeController {
         }
 
         try {
-            Workbook workbook = new XSSFWorkbook(excelFile);
+            workbook = new XSSFWorkbook(excelFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Sheet datatypeSheet = workbook.getSheetAt(0);
         Iterator <org.apache.poi.ss.usermodel.Row> iterator = datatypeSheet.iterator();
-        while(iterator.hasNext()){
+        Boolean cycleExitFlag = false;
+        int j = 0;
+        while(iterator.hasNext() && cycleExitFlag){
 
             org.apache.poi.ss.usermodel.Row currentRow = iterator.next();
             Iterator<Cell> cellIterator = currentRow.iterator();
+            logContent.add(j, new LogContent());
 
-            while (cellIterator.hasNext()){
+            for (int i = 0; i < 4; i++){
                 Cell currentCell = cellIterator.next();
+                if (i == 3 && currentCell.getStringCellValue().equals("")){
+                    cycleExitFlag = true;
+                    break;
+                }
+
+                if (i == 0){
+                    logContent.get(j).setCaseNumber(currentCell.getStringCellValue());
+
+                }
+
+                if (i == 3){
+                    logContent.get(j).setArbNumber(currentCell.getStringCellValue());
+                }
+
             }
         }
+        try {
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            excelFile.close();
+        } catch (IOException e) {
+
+        }
+
 
         /*
         Секция парсера сайта
          */
+        model.addAttribute("logcontent", logContent);
         model.addAttribute("greeting", new Greeting());
 
         try {
@@ -102,7 +132,7 @@ public class HomeController {
     }
     @PostMapping(value = "/greeting")
     public String greetingSubmit(@ModelAttribute Greeting greeting) {
-        this.greeting = greeting;
+        //this.greeting = greeting;
         System.out.println(greeting.getCaptcha());
         System.out.println(greeting.getInn());
         System.out.println(captchaToken);
@@ -144,19 +174,7 @@ public class HomeController {
         System.out.println(finalString);
 
 
-
-
-
-//
-
-
         return "result";
     }
-
-
-
-
-
-
 
 }
