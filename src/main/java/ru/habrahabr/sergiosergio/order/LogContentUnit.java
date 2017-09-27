@@ -1,6 +1,6 @@
 package ru.habrahabr.sergiosergio.order;
 
-public class LogContent {
+public class LogContentUnit {
 
 
     private String caseNumber = null;

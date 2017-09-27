@@ -9,7 +9,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,7 +41,7 @@ public class HomeController {
     private String excelLogFile;
     private FileInputStream excelFile;
     private Workbook workbook;
-    List<LogContent> logContent = new ArrayList<>();
+    List<LogContentUnit> logContent = new ArrayList<>();
 
 
 
@@ -73,7 +72,7 @@ public class HomeController {
 
             org.apache.poi.ss.usermodel.Row currentRow = iterator.next();
             Iterator<Cell> cellIterator = currentRow.iterator();
-            logContent.add(j, new LogContent());
+            logContent.add(j, new LogContentUnit());
 
             for (int i = 0; i < 4; i++){
                 Cell currentCell = cellIterator.next();
@@ -109,6 +108,7 @@ public class HomeController {
         Секция парсера сайта
          */
         model.addAttribute("logcontent", logContent);
+
         model.addAttribute("greeting", new Greeting());
 
         try {
@@ -125,6 +125,7 @@ public class HomeController {
         Element captchaElement = inputElements.get(1);
         captchaToken = captchaElement.attr("value");
         model.addAttribute("imageSource", imageSourse );
+
 
 
 

@@ -7,15 +7,11 @@ public class Greeting {
 
     private String inn;
     private String captcha;
-    private List<LogContent> logContent =new ArrayList<>();
 
-    public List<LogContent> getLogContent() {
-        return logContent;
-    }
 
-    public void setLogContent(List<LogContent> logContent) {
-        this.logContent = logContent;
-    }
+
+
+
 
 
     public String getInn() {return inn;  }

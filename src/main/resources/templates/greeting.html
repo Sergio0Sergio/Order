@@ -20,11 +20,12 @@
 
     <!--/*--><!--@thymesVar id="imageSource" type="java.lang.String"--><!--*/-->
     <img th:src="${imageSource}" />
+    <!--/*--><!--@thymesVar id="logcontent" type="ru.habrahabr.sergiosergio.order.HomeController.log"--><!--*/-->
+    <select >
 
-    //<select>
-        //<option th:each="case : ${logcontent}" ></option>
+        <option th:each="${logcontent : ${logcontentunit}" ></option>
 
-    //</select>
+    </select>
     <p><input type="submit" value="Отправить" /> <input type="reset" value="Сброс" /></p>
 </form>
 
