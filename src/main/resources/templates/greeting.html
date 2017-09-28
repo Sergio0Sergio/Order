@@ -23,7 +23,7 @@
     <!--/*--><!--@thymesVar id="logcontent" type="ru.habrahabr.sergiosergio.order.HomeController.log"--><!--*/-->
     <select >
 
-        <option th:each="${logcontent : ${logcontentunit}" ></option>
+        <option th:each="${logcontent : ${logcontent.logcontentunit.case}" ></option>
 
     </select>
     <p><input type="submit" value="Отправить" /> <input type="reset" value="Сброс" /></p>

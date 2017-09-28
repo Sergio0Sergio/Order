@@ -29,9 +29,10 @@ import java.util.List;
 
 @Controller
 public class HomeController {
+
     private String imageSourse;//путь до файла капчи
     private String captchaToken;// токен капчи
-    //private Greeting;//класс для хранения введенных инн и капчи
+    private Greeting greeting = new Greeting();//класс для хранения введенных инн и капчи
     private Document webPage;//копия страницы для парсера
     private CloseableHttpResponse response2;//http responce
     private Responce result;//хранит pojo вариант json ответа
@@ -41,7 +42,7 @@ public class HomeController {
     private String excelLogFile;
     private FileInputStream excelFile;
     private Workbook workbook;
-    List<LogContentUnit> logContent = new ArrayList<>();
+
 
 
 
@@ -72,7 +73,7 @@ public class HomeController {
 
             org.apache.poi.ss.usermodel.Row currentRow = iterator.next();
             Iterator<Cell> cellIterator = currentRow.iterator();
-            logContent.add(j, new LogContentUnit());
+            greeting.getLogContent().add(j, new LogContentUnit());
 
             for (int i = 0; i < 4; i++){
                 Cell currentCell = cellIterator.next();
@@ -82,12 +83,12 @@ public class HomeController {
                 }
 
                 if (i == 0){
-                    logContent.get(j).setCaseNumber(currentCell.getStringCellValue());
+                    greeting.getLogContent().get(j).setCaseNumber(currentCell.getStringCellValue());
 
                 }
 
                 if (i == 3){
-                    logContent.get(j).setArbNumber(currentCell.getStringCellValue());
+                    greeting.getLogContent().get(j).setArbNumber(currentCell.getStringCellValue());
                 }
 
             }
@@ -107,7 +108,7 @@ public class HomeController {
         /*
         Секция парсера сайта
          */
-        model.addAttribute("logcontent", logContent);
+        //model.addAttribute("logcontent", logContent);
 
         model.addAttribute("greeting", new Greeting());
 
