@@ -8,14 +8,23 @@ public class Greeting {
     private String inn;
     private String captcha;
     private List<LogContentUnit> logContent = new ArrayList<>();
-    private LogContentUnit logContentUnitTheChosenOne;
+    private String theChosenCase;
+    private String finalString;
 
-    public LogContentUnit getLogContentUnitTheChosenOne() {
-        return logContentUnitTheChosenOne;
+    public String getFinalString() {
+        return finalString;
     }
 
-    public void setLogContentUnitTheChosenOne(LogContentUnit logContentUnitTheChosenOne) {
-        this.logContentUnitTheChosenOne = logContentUnitTheChosenOne;
+    public void setFinalString(String finalString) {
+        this.finalString = finalString;
+    }
+
+    public String getTheChosenCase() {
+        return theChosenCase;
+    }
+
+    public void setTheChosenCase(String theChosenCase) {
+        this.theChosenCase = theChosenCase;
     }
 
     public List<LogContentUnit> getLogContent() {

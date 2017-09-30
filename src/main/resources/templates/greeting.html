@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:margin="http://www.w3.org/1999/xhtml">
 <head>
     <title>Судебные приказы</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 
-<h1>Сервис формирования судебных приказов</h1>
+<div class="parent">
+    <div class="child" style="text-align: center;">
 
     <!--/*--><!--@thymesVar id="greeting" type="ru.habrahabr.sergiosergio.order.Greeting"--><!--*/-->
 <form action="#" th:action="@{/greeting}" th:object="${greeting}" method="post">
@@ -21,13 +22,11 @@
     <!--/*--><!--@thymesVar id="imageSource" type="java.lang.String"--><!--*/-->
     <img th:src="${imageSource}" />
     <!--/*--><!--@thymesVar id="logcontent" type="ru.habrahabr.sergiosergio.order.HomeController.log"--><!--*/-->
-    <select >
 
-        <option th:each="${logcontent : ${logcontent.logcontentunit.case}" ></option>
-
-    </select>
     <p><input type="submit" value="Отправить" /> <input type="reset" value="Сброс" /></p>
 </form>
+    </div>
+</div>
 
 </body>
 </html>

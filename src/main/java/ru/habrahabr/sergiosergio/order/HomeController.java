@@ -9,6 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,6 +43,7 @@ public class HomeController {
     private String excelLogFile;
     private FileInputStream excelFile;
     private Workbook workbook;
+    org.apache.poi.ss.usermodel.Row currentRow = null;
 
 
 
@@ -52,58 +54,58 @@ public class HomeController {
          /*
         Секция чтения файлов
          */
-        try {
-            excelFile = new FileInputStream(new File(excelLogFile));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            workbook = new XSSFWorkbook(excelFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Sheet datatypeSheet = workbook.getSheetAt(0);
-        Iterator <org.apache.poi.ss.usermodel.Row> iterator = datatypeSheet.iterator();
-        Boolean cycleExitFlag = false;
-        int j = 0;
-        while(iterator.hasNext() && cycleExitFlag){
-
-            org.apache.poi.ss.usermodel.Row currentRow = iterator.next();
-            Iterator<Cell> cellIterator = currentRow.iterator();
-            greeting.getLogContent().add(j, new LogContentUnit());
-
-            for (int i = 0; i < 4; i++){
-                Cell currentCell = cellIterator.next();
-                if (i == 3 && currentCell.getStringCellValue().equals("")){
-                    cycleExitFlag = true;
-                    break;
-                }
-
-                if (i == 0){
-                    greeting.getLogContent().get(j).setCaseNumber(currentCell.getStringCellValue());
-
-                }
-
-                if (i == 3){
-                    greeting.getLogContent().get(j).setArbNumber(currentCell.getStringCellValue());
-                }
-
-            }
-        }
-        try {
-            workbook.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            excelFile.close();
-        } catch (IOException e) {
-
-        }
-
+//        try {
+//            excelFile = new FileInputStream(new File("D:\\tools\\Java\\судебный приказ\\06-09-2017_18-24-46\\Журнал движения 2017.xls"));
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            workbook = new HSSFWorkbook(excelFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Sheet datatypeSheet = workbook.getSheetAt(0);
+//        Iterator <org.apache.poi.ss.usermodel.Row> iterator = datatypeSheet.iterator();
+//        Boolean cycleExitFlag = false;
+//        int j = 0;
+//        while(iterator.hasNext()){
+//
+//            currentRow = iterator.next();
+//            Iterator<Cell> cellIterator = currentRow.iterator();
+//            greeting.getLogContent().add(j, new LogContentUnit());
+//
+//            for (int i = 0; i < 5; i++){
+//                Cell currentCell = cellIterator.next();
+//                if (i == 5 && currentCell.getStringCellValue().equals("")){
+//                    cycleExitFlag = true;
+//                    break;
+//                }
+//
+//                if (i == 0){
+//                    greeting.getLogContent().get(j).setCaseNumber(currentCell.getStringCellValue());
+//
+//                }
+//
+//                if (i == 3){
+//                    greeting.getLogContent().get(j).setArbNumber(currentCell.getStringCellValue());
+//                }
+//
+//            }
+//        }
+//        try {
+//            workbook.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            excelFile.close();
+//        } catch (IOException e) {
+//
+//        }
+//
 
         /*
         Секция парсера сайта
@@ -133,11 +135,12 @@ public class HomeController {
         return "greeting";
     }
     @PostMapping(value = "/greeting")
-    public String greetingSubmit(@ModelAttribute Greeting greeting) {
-        //this.greeting = greeting;
-        System.out.println(greeting.getCaptcha());
-        System.out.println(greeting.getInn());
-        System.out.println(captchaToken);
+    public String greetingSubmit(@ModelAttribute Greeting greeting, Model model) {
+
+//        System.out.println(greeting.getCaptcha());
+//        System.out.println(greeting.getInn());
+//        System.out.println(captchaToken);
+//        System.out.println(greeting.getTheChosenCase());
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost("https://egrul.nalog.ru/");
@@ -171,9 +174,11 @@ public class HomeController {
 
         result = gson.fromJson(json, Responce.class);
         Row row = result.getRows().get(0);
-        String finalString = row.getNAME()+ row.getADRESTEXT() + row.getOGRN() + row.getINN() + row.getDTREG();
+        String finalString = row.getNAME()+" "+ row.getADRESTEXT() +" "+ row.getOGRN() +" "+ row.getINN() +" "+ row.getDTREG();
+        model.addAttribute("finalstring", finalString);
 
-        System.out.println(finalString);
+        //System.out.println(finalString);
+
 
 
         return "result";
